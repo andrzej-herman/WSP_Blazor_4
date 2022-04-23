@@ -1,0 +1,78 @@
+@page "/students"
+@using Models
+<h3>Lista studentów</h3>
+<hr/>
+@if (students != null)
+{
+    <table class="table mt-3">
+    <thead>
+        <tr>
+        <th scope="col">#</th>
+        <th scope="col">Imię</th>
+        <th scope="col">Nazwisko</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in students)
+        {
+            <tr>
+                <th scope="row">@student.StudentId</th>
+                <td>@student.FirstName</td>
+                <td>@student.LastName</td>
+            </tr>
+        } 
+    </tbody>
+    </table>
+
+    <hr/>
+    <h3>Dodaj nowego studenta</h3>
+    <div class="row">
+         <div class="col-sm">
+             <div class="form-group mt-2">
+            <label for="firstName">Imię</label>
+            <input type="text" class="form-control" id="firstName" @bind-value="@newStudent.FirstName">
+        </div>
+        <div class="form-group mt-2">
+            <label for="lastName">Nazwisko</label>
+            <input type="text" class="form-control" id="lastName" @bind-value="@newStudent.LastName">
+        </div>
+        <button class="btn btn-primary mt-2" @onclick="Zapisz">Zapisz</button>
+         </div>
+         <div class="col-sm"></div>
+         <div class="col-sm"></div>
+    </div>
+        
+}
+else
+{
+    <div>Trwa ładowanie listy studentów ...</div>
+}
+
+
+@code {
+
+        List<Student> students;
+        Student newStudent = new Student();
+
+        protected override async Task OnInitializedAsync()
+        {
+            await Task.Delay(500);
+            students = new List<Student>
+            {
+                new Student(1, "Andrzej", "Herman"),
+                new Student(2, "Jan", "Kowalski"),
+                new Student(3, "Agata", "Nowak"),
+                new Student(4, "Janusz", "Górski"),
+                new Student(5, "Mariola", "Piotrowska"),
+                new Student(6, "Grzegorz", "Kaliciak"),
+            };
+        }
+
+        void Zapisz()
+        {
+            newStudent.StudentId = students.Max(s => s.StudentId) + 1;
+            students.Add(newStudent);
+        }
+
+}
+
